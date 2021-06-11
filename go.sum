@@ -1,3 +1,5 @@
+github.com/gorilla/websocket v1.4.2 h1:+/TMaTYc4QFitKJxsQ7Yye35DkWvkdLcvGKqM+x0Ufc=
+github.com/gorilla/websocket v1.4.2/go.mod h1:YR8l580nyteQvAITg2hZ9XVh4b55+EU/adAjf1fMHhE=
 github.com/robotn/gohook v0.30.5 h1:yECDQXcKUcMxYLzPWBEKaHNiNss6lLq15RrgouDCKw4=
 github.com/robotn/gohook v0.30.5/go.mod h1:FXryR68cDIho8rjE7MKxt4n4aK2FBqp+d/0HK4oiGP8=
 github.com/vcaesar/tt v0.11.0 h1:obQecjgbnAxxC6OYGY6yDvhGRW2PR5wD8Ma2uJH3WGA=
