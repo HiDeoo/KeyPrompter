@@ -6,7 +6,7 @@ import (
 	hook "github.com/robotn/gohook"
 )
 
-func HandleEvents() {
+func HandleEvents(onEvent func()) {
 	eventChannel := hook.Start()
 	defer hook.End()
 
@@ -17,6 +17,8 @@ func HandleEvents() {
 			fmt.Println("hook: ", event)
 			fmt.Println("keychar: ", keychar)
 			fmt.Println("------------------------------------------------------------------------")
+
+			onEvent()
 		}
 	}
 }

@@ -6,7 +6,9 @@ import (
 )
 
 func main() {
-	net.Serve()
+	pool := net.Serve()
 
-	keyboard.HandleEvents()
+	keyboard.HandleEvents(func() {
+		pool.Broadcast <- []byte("EVENT")
+	})
 }

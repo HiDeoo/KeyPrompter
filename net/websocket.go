@@ -13,7 +13,7 @@ var upgrader = websocket.Upgrader{
 	CheckOrigin:     func(r *http.Request) bool { return true },
 }
 
-func webSocketHandler(rw http.ResponseWriter, r *http.Request) {
+func webSocketHandler(rw http.ResponseWriter, r *http.Request, pool *Pool) {
 	conn, err := upgrader.Upgrade(rw, r, nil)
 
 	if err != nil {
@@ -22,7 +22,8 @@ func webSocketHandler(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	client := &Client{conn: conn}
+	client := &Client{conn: conn, pool: pool, send: make(chan []byte, 256)}
+	client.pool.register <- client
 
 	go client.write()
 	go client.read()

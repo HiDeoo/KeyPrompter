@@ -15,13 +15,17 @@ const (
 
 type Client struct {
 	conn *websocket.Conn
+	pool *Pool
 	send chan []byte
 }
 
 // TODO(HiDeoo) Search for `[]byte`
 
 func (client *Client) read() {
-	defer client.conn.Close()
+	defer func() {
+		client.pool.unregister <- client
+		client.conn.Close()
+	}()
 
 	client.conn.SetReadDeadline(time.Now().Add(readDeadlineDuration))
 	client.conn.SetPongHandler(func(appData string) error {

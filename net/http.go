@@ -10,15 +10,25 @@ import (
 
 const Timeout = 10 * time.Second
 
-func Serve() {
-	addRouteHandlers()
+func Serve() *Pool {
+	pool := newPool()
 
-	// TODO(HiDeoo)
-	log.Fatal(http.ListenAndServe(":8484", nil))
+	go pool.run()
+
+	addRouteHandlers(pool)
+
+	go func() {
+		// TODO(HiDeoo)
+		log.Fatal(http.ListenAndServe(":8484", nil))
+	}()
+
+	return pool
 }
 
-func addRouteHandlers() {
+func addRouteHandlers(pool *Pool) {
 	http.Handle("/", ui.AssetHandler())
 
-	http.HandleFunc("/ws", webSocketHandler)
+	http.HandleFunc("/ws", func(rw http.ResponseWriter, r *http.Request) {
+		webSocketHandler(rw, r, pool)
+	})
 }
