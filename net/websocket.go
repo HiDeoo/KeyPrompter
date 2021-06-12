@@ -14,29 +14,16 @@ var upgrader = websocket.Upgrader{
 }
 
 func webSocketHandler(rw http.ResponseWriter, r *http.Request) {
-	ws, err := upgrader.Upgrade(rw, r, nil)
+	conn, err := upgrader.Upgrade(rw, r, nil)
 
 	if err != nil {
 		// TODO(HiDeoo)
-		fmt.Println("Error when upgrading connection")
-
+		fmt.Println("Error when upgrading the connection to the WebSocket protocol.")
 		return
 	}
 
-	reader(ws)
-}
+	client := &Client{conn: conn}
 
-func reader(conn *websocket.Conn) {
-	for {
-		_, p, err := conn.ReadMessage()
-
-		if err != nil {
-			// TODO(HiDeoo)
-			fmt.Println("Error when reading message")
-
-			return
-		}
-
-		fmt.Println(string(p))
-	}
+	go client.write()
+	go client.read()
 }
