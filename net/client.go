@@ -1,6 +1,7 @@
 package net
 
 import (
+	"encoding/json"
 	"fmt"
 	"time"
 
@@ -18,8 +19,6 @@ type Client struct {
 	pool *Pool
 	send chan []byte
 }
-
-// TODO(HiDeoo) Search for `[]byte`
 
 func (client *Client) read() {
 	defer func() {
@@ -45,8 +44,14 @@ func (client *Client) read() {
 			break
 		}
 
-		// TODO(HiDeoo)
-		fmt.Println("->", string(p))
+		var message Message
+
+		err = json.Unmarshal(p, &message)
+
+		if err == nil {
+			// TODO(HiDeoo)
+			fmt.Println(">> ", message.ErrorMessage.Message)
+		}
 	}
 }
 
@@ -75,13 +80,6 @@ func (client *Client) write() {
 			}
 
 			writer.Write(message)
-
-			outboundLength := len(client.send)
-
-			for i := 0; i < outboundLength; i++ {
-				writer.Write([]byte{'\n'})
-				writer.Write(<-client.send)
-			}
 
 			if err := writer.Close(); err != nil {
 				return

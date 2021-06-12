@@ -23,7 +23,7 @@ function App() {
   }, [])
 
   function send() {
-    socket.send('hello from client')
+    socket.send(JSON.stringify({ type: 'error', message: 'hello from client' }))
   }
 
   return (
