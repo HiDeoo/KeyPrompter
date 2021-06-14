@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import './App.css'
 
-const socket = new WebSocket('ws://localhost:8484/ws')
+const socket = new WebSocket(`ws://${window.location.host}/ws`)
 
 function App() {
   useEffect(() => {

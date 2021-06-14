@@ -3,6 +3,7 @@ package net
 import (
 	"log"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/HiDeoo/KeyPrompter/ui"
@@ -10,7 +11,7 @@ import (
 
 const Timeout = 10 * time.Second
 
-func Serve() *Pool {
+func Serve(port uint) *Pool {
 	pool := newPool()
 
 	go pool.run()
@@ -19,7 +20,7 @@ func Serve() *Pool {
 
 	go func() {
 		// TODO(HiDeoo)
-		log.Fatal(http.ListenAndServe(":8484", nil))
+		log.Fatal(http.ListenAndServe(":"+strconv.FormatUint(uint64(port), 10), nil))
 	}()
 
 	return pool
