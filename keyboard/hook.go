@@ -6,19 +6,23 @@ import (
 	hook "github.com/robotn/gohook"
 )
 
-func HandleEvents(onEvent func()) {
+type KeyboardEvent struct {
+	KeyChar string `json:"key_char"`
+}
+
+func HandleEvents(onEvent func(keyboardEvent KeyboardEvent)) {
 	eventChannel := hook.Start()
 	defer hook.End()
 
 	for event := range eventChannel {
 		if event.Kind == hook.KeyDown || event.Kind == hook.KeyHold {
+			fmt.Println("hook: ", event)
+
 			keychar := hook.RawcodetoKeychar(event.Rawcode)
 
-			fmt.Println("hook: ", event)
-			fmt.Println("keychar: ", keychar)
-			fmt.Println("------------------------------------------------------------------------")
+			keyboardEvent := KeyboardEvent{KeyChar: keychar}
 
-			onEvent()
+			onEvent(keyboardEvent)
 		}
 	}
 }

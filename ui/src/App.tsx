@@ -10,7 +10,12 @@ function App() {
     }
 
     socket.onmessage = (msg) => {
-      console.log('onmessage', msg)
+      try {
+        const data = JSON.parse(msg.data)
+        console.log('data ', data)
+      } catch (error) {
+        console.log('error ', error)
+      }
     }
 
     socket.onclose = (event) => {
