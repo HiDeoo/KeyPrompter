@@ -2,9 +2,9 @@ package net
 
 import (
 	"encoding/json"
-	"fmt"
 	"time"
 
+	"github.com/HiDeoo/KeyPrompter/cli"
 	"github.com/gorilla/websocket"
 )
 
@@ -37,8 +37,7 @@ func (client *Client) read() {
 
 		if err != nil {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
-				// TODO(HiDeoo)
-				fmt.Printf("error: %v", err)
+				cli.PrintServerError(err)
 			}
 
 			break
@@ -49,8 +48,7 @@ func (client *Client) read() {
 		err = json.Unmarshal(p, &message)
 
 		if err == nil {
-			// TODO(HiDeoo)
-			fmt.Println(">> ", message.ErrorMessage.Message)
+			cli.PrintUIError(message.ErrorMessage.Message)
 		}
 	}
 }

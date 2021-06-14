@@ -1,11 +1,13 @@
 package net
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"strconv"
 	"time"
 
+	"github.com/HiDeoo/KeyPrompter/cli"
 	"github.com/HiDeoo/KeyPrompter/ui"
 )
 
@@ -19,7 +21,8 @@ func Serve(port uint) *Pool {
 	addRouteHandlers(pool)
 
 	go func() {
-		// TODO(HiDeoo)
+		fmt.Printf("You can now view the KeyPrompter UI in the browser: %s%s.\n", cli.Green("http://localhost:"), cli.BoldGreen(port))
+
 		log.Fatal(http.ListenAndServe(":"+strconv.FormatUint(uint64(port), 10), nil))
 	}()
 

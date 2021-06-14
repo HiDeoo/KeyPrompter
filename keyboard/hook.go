@@ -16,6 +16,7 @@ func HandleEvents(onEvent func(keyboardEvent KeyboardEvent)) {
 
 	for event := range eventChannel {
 		if event.Kind == hook.KeyDown || event.Kind == hook.KeyHold {
+			// TODO(HiDeoo)
 			fmt.Println("hook: ", event)
 
 			keychar := hook.RawcodetoKeychar(event.Rawcode)

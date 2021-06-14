@@ -46,7 +46,3 @@ func (message Message) MarshalJSON() ([]byte, error) {
 		return json.Marshal(nil)
 	}
 }
-
-func (message Message) String() string {
-	return fmt.Sprintf("{ ErrorMessage: %+v }", message.ErrorMessage)
-}

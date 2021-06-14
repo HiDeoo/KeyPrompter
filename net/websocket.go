@@ -1,9 +1,9 @@
 package net
 
 import (
-	"fmt"
 	"net/http"
 
+	"github.com/HiDeoo/KeyPrompter/cli"
 	"github.com/gorilla/websocket"
 )
 
@@ -17,8 +17,7 @@ func webSocketHandler(rw http.ResponseWriter, r *http.Request, pool *Pool) {
 	conn, err := upgrader.Upgrade(rw, r, nil)
 
 	if err != nil {
-		// TODO(HiDeoo)
-		fmt.Println("Error when upgrading the connection to the WebSocket protocol.")
+		cli.PrintServerError("Error when upgrading the connection to the WebSocket protocol.")
 		return
 	}
 
