@@ -1,6 +1,8 @@
 package keyboard
 
-import hook "github.com/robotn/gohook"
+import (
+	hook "github.com/robotn/gohook"
+)
 
 type KeyboardModifier = uint16
 
@@ -16,6 +18,12 @@ const (
 	Fn                            = 63
 )
 
+type KeyboardEvent struct {
+	Character string            `json:"character"`
+	Code      uint16            `json:"code"`
+	Modifiers KeyboardModifiers `json:"modifiers"`
+}
+
 type KeyboardModifiers struct {
 	Command bool `json:"command"`
 	Control bool `json:"control"`
@@ -24,12 +32,10 @@ type KeyboardModifiers struct {
 	Shift   bool `json:"shift"`
 }
 
-type KeyboardEvent struct {
-	Modifiers KeyboardModifiers `json:"modifiers"`
-}
-
 func newKeyboardEvent(event hook.Event, modifiers map[KeyboardModifier]hook.Event) KeyboardEvent {
 	return KeyboardEvent{
+		Character: hook.RawcodetoKeychar(event.Rawcode),
+		Code:      event.Rawcode,
 		Modifiers: newKeyboardModifiers(modifiers),
 	}
 }

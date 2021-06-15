@@ -24,6 +24,7 @@ func HandleEvents(onEvent func(keyboardEvent KeyboardEvent)) {
 
 					onEvent(keyboardEvent)
 				}
+				break
 			case hook.KeyHold:
 				if isModifier(event) {
 					modifiers[event.Rawcode] = event
