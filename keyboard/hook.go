@@ -6,24 +6,37 @@ import (
 	hook "github.com/robotn/gohook"
 )
 
-type KeyboardEvent struct {
-	KeyChar string `json:"key_char"`
-}
-
 func HandleEvents(onEvent func(keyboardEvent KeyboardEvent)) {
 	eventChannel := hook.Start()
 	defer hook.End()
 
+	modifiers := make(map[KeyboardModifier]hook.Event)
+
 	for event := range eventChannel {
-		if event.Kind == hook.KeyDown || event.Kind == hook.KeyHold {
-			// TODO(HiDeoo)
-			fmt.Println("hook: ", event)
+		if event.Kind == hook.KeyDown || event.Kind == hook.KeyHold || event.Kind == hook.KeyUp {
+			switch event.Kind {
+			case hook.KeyDown:
+				if !isModifier(event) {
+					keyboardEvent := newKeyboardEvent(event, modifiers)
 
-			keychar := hook.RawcodetoKeychar(event.Rawcode)
+					// TODO(HiDeoo)
+					fmt.Printf("%+v\n", keyboardEvent)
 
-			keyboardEvent := KeyboardEvent{KeyChar: keychar}
-
-			onEvent(keyboardEvent)
+					onEvent(keyboardEvent)
+				}
+			case hook.KeyHold:
+				if isModifier(event) {
+					modifiers[event.Rawcode] = event
+				}
+				break
+			case hook.KeyUp:
+				if isModifier(event) {
+					if _, ok := modifiers[event.Rawcode]; ok {
+						delete(modifiers, event.Rawcode)
+					}
+				}
+				break
+			}
 		}
 	}
 }
