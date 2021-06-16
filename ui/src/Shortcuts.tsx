@@ -1,18 +1,30 @@
-import { useCallback, useEffect } from 'react'
+import { nanoid } from 'nanoid'
+import { useCallback, useEffect, useState } from 'react'
 import { useErrorHandler } from 'react-error-boundary'
 
 import { useWebSocket } from './WebSocketContext'
 
+// In milliseconds.
+const ShortcutDuration = 5000
+
 const Shortcuts: React.FC = () => {
   const ws = useWebSocket()
   const handleError = useErrorHandler()
+
+  const [shortcuts, setShortcuts] = useState<Shortcut[]>([])
 
   ws.onclose = () => {
     handleError(new Error('Connection to websocket closed.'))
   }
 
   const onMessage = useCallback(() => {
-    console.log('MESSAGE')
+    const id = nanoid()
+
+    setShortcuts((prevShortcuts) => addShortcut(prevShortcuts, id))
+
+    setTimeout(() => {
+      setShortcuts((prevShortcuts) => removeShortcut(prevShortcuts, id))
+    }, ShortcutDuration)
   }, [])
 
   useEffect(() => {
@@ -23,7 +35,29 @@ const Shortcuts: React.FC = () => {
     }
   }, [ws, onMessage])
 
-  return <div>Shortcuts2</div>
+  return (
+    <div>
+      {shortcuts.map((tt) => (
+        <div key={tt}>{tt}</div>
+      ))}
+    </div>
+  )
 }
 
 export default Shortcuts
+
+function addShortcut(shortcuts: Shortcut[], shortcut: Shortcut): Shortcut[] {
+  return [...shortcuts, shortcut]
+}
+
+function removeShortcut(shortcuts: Shortcut[], shortcut: Shortcut): Shortcut[] {
+  const shortcutIndex = shortcuts.indexOf(shortcut)
+
+  if (shortcutIndex !== 1) {
+    return [...shortcuts.slice(0, shortcutIndex), ...shortcuts.slice(shortcutIndex + 1)]
+  }
+
+  return shortcuts
+}
+
+type Shortcut = string
