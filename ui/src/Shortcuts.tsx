@@ -4,8 +4,8 @@ import { useErrorHandler } from 'react-error-boundary'
 
 import { useWebSocket } from './WebSocketContext'
 
-// In milliseconds.
-const ShortcutDuration = 5000
+const ShortcutDuration = 5000 // In milliseconds.
+const ShortcutMaxCount = 5
 
 const Shortcuts: React.FC = () => {
   const ws = useWebSocket()
@@ -47,13 +47,13 @@ const Shortcuts: React.FC = () => {
 export default Shortcuts
 
 function addShortcut(shortcuts: Shortcut[], shortcut: Shortcut): Shortcut[] {
-  return [...shortcuts, shortcut]
+  return [...shortcuts.slice(-1 * ShortcutMaxCount + 1), shortcut]
 }
 
 function removeShortcut(shortcuts: Shortcut[], shortcut: Shortcut): Shortcut[] {
   const shortcutIndex = shortcuts.indexOf(shortcut)
 
-  if (shortcutIndex !== 1) {
+  if (shortcutIndex !== -1) {
     return [...shortcuts.slice(0, shortcutIndex), ...shortcuts.slice(shortcutIndex + 1)]
   }
 
