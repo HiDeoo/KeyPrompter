@@ -1,7 +1,7 @@
 /**
- * Duration in milliseconds during when a shortcut is visible on screen.
+ * Duration in seconds during when a shortcut is visible on screen.
  */
-export const SHORTCUT_DURATION = 5000
+export const SHORTCUT_DURATION = 5
 
 /**
  * Maximum number of shortcuts visible at the same time.

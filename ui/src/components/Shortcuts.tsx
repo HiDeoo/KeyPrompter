@@ -1,7 +1,9 @@
+import { AnimatePresence } from 'framer-motion'
 import { nanoid } from 'nanoid'
 import { useCallback, useEffect, useState } from 'react'
 import { useErrorHandler } from 'react-error-boundary'
 
+import Shortcut from './Shortcut'
 import { SHORTCUT_DURATION } from '../constants/shortcut'
 import { useWebSocket } from '../contexts/WebSocketContext'
 import {
@@ -11,6 +13,8 @@ import {
   ShortcutEvent,
   ShortcutEventData,
 } from '../utils/shortcutEvent'
+
+import './Shortcuts.css'
 
 const Shortcuts: React.FC = () => {
   const ws = useWebSocket()
@@ -44,7 +48,7 @@ const Shortcuts: React.FC = () => {
 
       setTimeout(() => {
         setShortcutEvents((prevShortcutEvents) => removeShortcutEvent(prevShortcutEvents, id))
-      }, SHORTCUT_DURATION)
+      }, SHORTCUT_DURATION * 1000)
     },
     [handleError]
   )
@@ -58,11 +62,13 @@ const Shortcuts: React.FC = () => {
   }, [ws, onMessage])
 
   return (
-    <div>
-      {shortcutEvents.map((shortcutEvent) => (
-        <div key={shortcutEvent.id}>{JSON.stringify(shortcutEvent)}</div>
-      ))}
-    </div>
+    <ul className="shortcuts">
+      <AnimatePresence>
+        {shortcutEvents.map((shortcutEvent) => (
+          <Shortcut key={shortcutEvent.id} event={shortcutEvent} />
+        ))}
+      </AnimatePresence>
+    </ul>
   )
 }
 
