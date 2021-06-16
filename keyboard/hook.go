@@ -16,7 +16,7 @@ func HandleEvents(onEvent func(keyboardEvent KeyboardEvent)) {
 		if event.Kind == hook.KeyDown || event.Kind == hook.KeyHold || event.Kind == hook.KeyUp {
 			switch event.Kind {
 			case hook.KeyDown:
-				if !isModifier(event) {
+				if !isModifier(event) && len(modifiers) > 0 {
 					keyboardEvent := newKeyboardEvent(event, modifiers)
 
 					// TODO(HiDeoo)
