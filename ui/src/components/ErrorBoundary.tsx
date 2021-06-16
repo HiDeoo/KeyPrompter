@@ -1,6 +1,6 @@
 import { ErrorBoundary as Boundary, ErrorBoundaryPropsWithComponent, FallbackProps } from 'react-error-boundary'
 
-import { useWebSocket } from './WebSocketContext'
+import { useWebSocket } from '../contexts/WebSocketContext'
 
 const ErrorBoundary: React.FC = ({ children }) => {
   const ws = useWebSocket()
