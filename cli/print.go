@@ -11,7 +11,7 @@ var BoldGreen = color.New(color.FgHiGreen, color.Bold).SprintFunc()
 var BoldRed = color.New(color.FgHiRed, color.Bold).SprintFunc()
 
 func PrintServerError(errorOrMessage interface{}) {
-	fmt.Printf("%s %.\n", BoldRed("Server error:"), errorOrMessage)
+	fmt.Printf("%s %s\n", BoldRed("Server error:"), errorOrMessage)
 }
 
 func PrintUIError(message string) {
