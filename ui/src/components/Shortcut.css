@@ -10,7 +10,7 @@
 .description {
   background-color: rgba(0, 0, 0, 0.6);
   border-radius: 5px;
-  color: white;
+  color: var(--font-color);
   display: inline-block;
   font-size: var(--font-size);
   font-weight: bold;

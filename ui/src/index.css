@@ -17,5 +17,6 @@ body > div {
 }
 
 :root {
+  --font-color: white;
   --font-size: 18px;
 }

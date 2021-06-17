@@ -18,5 +18,6 @@ func ReadConfig(path string) *ClientConfig {
 }
 
 type ClientConfig struct {
-	FontSize int `json:"font-size"`
+	FontColor string `json:"font-color"`
+	FontSize  int    `json:"font-size"`
 }
