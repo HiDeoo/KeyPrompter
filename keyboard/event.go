@@ -78,6 +78,18 @@ func isModifier(event hook.Event) bool {
 		isShiftModifier(event)
 }
 
+func isShiftOnlyModifier(modifiers map[KeyboardModifier]hook.Event) bool {
+	if len(modifiers) > 1 {
+		return false
+	}
+
+	for _, modifier := range modifiers {
+		return isShiftModifier(modifier)
+	}
+
+	return false
+}
+
 func isCommandModifier(event hook.Event) bool {
 	return event.Rawcode == CommandLeft || event.Rawcode == CommandRight
 }
