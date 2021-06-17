@@ -20,7 +20,7 @@ const (
 
 type KeyboardEvent struct {
 	Character string            `json:"character"`
-	Code      uint16            `json:"code"`
+	Code      KeyboardModifier  `json:"code"`
 	Modifiers KeyboardModifiers `json:"modifiers"`
 }
 
@@ -32,12 +32,57 @@ type KeyboardModifiers struct {
 	Shift   bool `json:"shift"`
 }
 
+var SpecialKeyMap = map[KeyboardModifier]string{
+	36:  "↩",   // Return
+	51:  "⌫",   // Delete
+	53:  "⎋",   // Escape
+	64:  "F17", // F17
+	71:  "⌧",   // Numpad Clear
+	76:  "↩",   // Enter
+	79:  "F18", // F18
+	80:  "F19", // F19
+	90:  "F20", // F20
+	96:  "F5",  // F5
+	97:  "F6",  // F6
+	98:  "F7",  // F7
+	99:  "F3",  // F3
+	100: "F8",  // F8
+	101: "F9",  // F9
+	103: "F11", // F11
+	105: "F13", // F13
+	106: "F16", // F16
+	107: "F14", // F14
+	109: "F10", // F10
+	111: "F12", // F12
+	113: "F15", // F15
+	115: "↖",   // Home
+	116: "⇞",   // Page Up
+	117: "⌦",   // Delete Forward
+	118: "F4",  // F4
+	119: "↘",   // End
+	120: "F2",  // F2
+	121: "⇟",   // Page Down
+	122: "F1",  // F1
+	123: "←",   // Arrow Left
+	124: "→",   // Arrow Right
+	125: "↓",   // Arrow Down
+	126: "↑",   // Arrow Up
+}
+
 func newKeyboardEvent(event hook.Event, modifiers map[KeyboardModifier]hook.Event) KeyboardEvent {
-	return KeyboardEvent{
+	keyboardEvent := KeyboardEvent{
 		Character: hook.RawcodetoKeychar(event.Rawcode),
 		Code:      event.Rawcode,
 		Modifiers: newKeyboardModifiers(modifiers),
 	}
+
+	if isSpecialKey(event) {
+		if specialKey, ok := SpecialKeyMap[event.Rawcode]; ok {
+			keyboardEvent.Character = specialKey
+		}
+	}
+
+	return keyboardEvent
 }
 
 func newKeyboardModifiers(modifiers map[KeyboardModifier]hook.Event) KeyboardModifiers {
@@ -85,6 +130,14 @@ func isShiftOnlyModifier(modifiers map[KeyboardModifier]hook.Event) bool {
 
 	for _, modifier := range modifiers {
 		return isShiftModifier(modifier)
+	}
+
+	return false
+}
+
+func isSpecialKey(event hook.Event) bool {
+	if _, ok := SpecialKeyMap[event.Rawcode]; ok {
+		return true
 	}
 
 	return false

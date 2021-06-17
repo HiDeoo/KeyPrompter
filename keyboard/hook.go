@@ -14,7 +14,7 @@ func HandleEvents(onEvent func(keyboardEvent KeyboardEvent)) {
 		if event.Kind == hook.KeyDown || event.Kind == hook.KeyHold || event.Kind == hook.KeyUp {
 			switch event.Kind {
 			case hook.KeyDown:
-				if !isModifier(event) && len(modifiers) > 0 && !isShiftOnlyModifier(modifiers) {
+				if !isModifier(event) && len(modifiers) > 0 && !isShiftOnlyModifier(modifiers) && !isSpecialKey(event) {
 					keyboardEvent := newKeyboardEvent(event, modifiers)
 
 					onEvent(keyboardEvent)
@@ -30,6 +30,10 @@ func HandleEvents(onEvent func(keyboardEvent KeyboardEvent)) {
 					if _, ok := modifiers[event.Rawcode]; ok {
 						delete(modifiers, event.Rawcode)
 					}
+				} else if !isModifier(event) && isSpecialKey(event) {
+					keyboardEvent := newKeyboardEvent(event, modifiers)
+
+					onEvent(keyboardEvent)
 				}
 				break
 			}
