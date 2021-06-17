@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
 
 import { SHORTCUT_DURATION } from '../constants/shortcut'
-import { ShortcutEvent } from '../utils/shortcutEvent'
+import { getShortcut, ShortcutEvent } from '../utils/shortcutEvent'
 
 import './Shortcut.css'
 
@@ -14,7 +14,7 @@ const AnimationVariants = {
 const Shortcut: React.FC<Props> = ({ event }) => {
   return (
     <motion.li className="shortcut" initial="initial" animate="visible" exit="exit" variants={AnimationVariants}>
-      <span>{event.id}</span>
+      <span>{getShortcut(event)}</span>
     </motion.li>
   )
 }

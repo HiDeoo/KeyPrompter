@@ -1,13 +1,6 @@
 .shortcut {
-  align-items: center;
-  background-color: rgba(0, 0, 0, 0.6);
-  border-radius: 5px;
-  color: white;
-  display: flex;
-  font-weight: bold;
   margin: 0;
   margin-bottom: 10px;
-  padding: 10px 13px;
 }
 
 .shortcut:last-child {
@@ -15,8 +8,10 @@
 }
 
 .shortcut > span {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  width: 200px;
+  background-color: rgba(0, 0, 0, 0.6);
+  border-radius: 5px;
+  color: white;
+  display: inline-block;
+  font-weight: bold;
+  padding: 10px 13px;
 }

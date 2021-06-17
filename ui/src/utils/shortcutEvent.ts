@@ -1,5 +1,18 @@
 import { SHORTCUT_MAX_COUNT } from '../constants/shortcut'
 
+const ModifierMap: Record<string, string> = {
+  command: '⌘',
+  control: '⌃',
+  fn: 'Fn',
+  option: '⌥',
+  shift: '⇧',
+}
+
+const CharacterMap: Record<string, string> = {
+  '\t': '⇥',
+  ' ': '␣',
+}
+
 export function addShortcutEvent(shortcutEvents: ShortcutEvent[], shortcutEvent: ShortcutEvent): ShortcutEvent[] {
   return [...shortcutEvents.slice(-1 * SHORTCUT_MAX_COUNT + 1), shortcutEvent]
 }
@@ -26,6 +39,30 @@ export function isShortcutEventData(data: unknown): data is ShortcutEventData {
     typeof (data as ShortcutEventData).modifiers.option === 'boolean' &&
     typeof (data as ShortcutEventData).modifiers.shift === 'boolean'
   )
+}
+
+export function getShortcut(shortcutEvent: ShortcutEvent): string {
+  return getShortcutModifiers(shortcutEvent).concat(getShortcutCharacter(shortcutEvent).toUpperCase())
+}
+
+function getShortcutModifiers({ modifiers }: ShortcutEvent): string {
+  let shortcutModifiers = ''
+
+  Object.entries(modifiers).forEach(([modifier, pressed]) => {
+    if (pressed && ModifierMap.hasOwnProperty(modifier)) {
+      shortcutModifiers = shortcutModifiers.concat(ModifierMap[modifier])
+    }
+  })
+
+  return shortcutModifiers
+}
+
+function getShortcutCharacter({ character }: ShortcutEvent): string {
+  if (CharacterMap.hasOwnProperty(character)) {
+    return CharacterMap[character]
+  }
+
+  return character
 }
 
 export interface ShortcutEvent {
