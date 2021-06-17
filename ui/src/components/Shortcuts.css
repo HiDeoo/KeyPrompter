@@ -1,7 +1,8 @@
 .shortcuts {
-  background-color: blue;
-  bottom: 0;
+  bottom: 10px;
+  left: 10px;
+  list-style-type: none;
   margin: 0;
-  left: 0;
+  padding: 0;
   position: absolute;
 }
