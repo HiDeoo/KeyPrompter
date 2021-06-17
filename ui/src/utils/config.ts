@@ -1,3 +1,5 @@
+import { ConfigContextDefinition } from '../contexts/ConfigContext'
+
 export function isClientConfig(data: unknown): data is ClientConfig {
   return (
     typeof data === 'object' &&
@@ -7,7 +9,15 @@ export function isClientConfig(data: unknown): data is ClientConfig {
   )
 }
 
-export function updateCLientConfig(clientConfig: ClientConfig) {
+export function updateClientConfig(
+  runtimeUpdater: ConfigContextDefinition['updateConfiguration'],
+  clientConfig: ClientConfig
+) {
+  runtimeUpdater((prevConfig) => ({
+    count: clientConfig.count > 0 ? clientConfig.count : prevConfig.count,
+    duration: clientConfig.duration > 0 ? clientConfig.duration : prevConfig.duration,
+  }))
+
   if (clientConfig['bg-color'].length > 0) {
     document.documentElement.style.setProperty('--bg-color', clientConfig['bg-color'])
   }
@@ -21,8 +31,15 @@ export function updateCLientConfig(clientConfig: ClientConfig) {
   }
 }
 
-export interface ClientConfig {
+export type ClientConfig = UIClientConfig & RuntimeClientConfig
+
+export interface UIClientConfig {
   'bg-color': string
   'font-color': string
   'font-size': number
+}
+
+export interface RuntimeClientConfig {
+  count: number
+  duration: number
 }

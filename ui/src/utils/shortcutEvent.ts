@@ -1,5 +1,3 @@
-import { SHORTCUT_MAX_COUNT } from '../constants/shortcut'
-
 const ModifierMap: Record<string, string> = {
   command: '⌘',
   control: '⌃',
@@ -13,7 +11,11 @@ const CharacterMap: Record<string, string> = {
   ' ': '␣',
 }
 
-export function addShortcutEvent(shortcutEvents: ShortcutEvent[], shortcutEvent: ShortcutEvent): ShortcutEvent[] {
+export function addShortcutEvent(
+  shortcutEvents: ShortcutEvent[],
+  shortcutEvent: ShortcutEvent,
+  count: number
+): ShortcutEvent[] {
   const previousShortcutEvent = shortcutEvents[shortcutEvents.length - 1]
 
   if (previousShortcutEvent && areShortcutEventsIdentical(previousShortcutEvent, shortcutEvent)) {
@@ -22,7 +24,7 @@ export function addShortcutEvent(shortcutEvents: ShortcutEvent[], shortcutEvent:
 
   shortcutEvent.count = 1
 
-  return [...shortcutEvents.slice(-1 * SHORTCUT_MAX_COUNT + 1), shortcutEvent]
+  return [...shortcutEvents.slice(-1 * count + 1), shortcutEvent]
 }
 
 export function removeShortcutEvent(shortcutEvents: ShortcutEvent[], id: ShortcutEvent['id']): ShortcutEvent[] {

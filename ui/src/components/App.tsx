@@ -1,10 +1,13 @@
+import { ConfigProvider } from '../contexts/ConfigContext'
 import ErrorBoundary from './ErrorBoundary'
 import Shortcuts from './Shortcuts'
 
 function App() {
   return (
     <ErrorBoundary>
-      <Shortcuts />
+      <ConfigProvider>
+        <Shortcuts />
+      </ConfigProvider>
     </ErrorBoundary>
   )
 }

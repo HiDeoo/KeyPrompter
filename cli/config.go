@@ -19,6 +19,8 @@ func ReadConfig(path string) *ClientConfig {
 
 type ClientConfig struct {
 	BgColor   string `json:"bg-color"`
+	Count     int    `json:"count"`
+	Duration  int    `json:"duration"`
 	FontColor string `json:"font-color"`
 	FontSize  int    `json:"font-size"`
 }

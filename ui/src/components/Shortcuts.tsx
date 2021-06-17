@@ -4,9 +4,9 @@ import { useCallback, useEffect, useState } from 'react'
 import { useErrorHandler } from 'react-error-boundary'
 
 import Shortcut from './Shortcut'
-import { SHORTCUT_DURATION } from '../constants/shortcut'
+import { useConfig } from '../contexts/ConfigContext'
 import { useWebSocket } from '../contexts/WebSocketContext'
-import { isClientConfig, updateCLientConfig } from '../utils/config'
+import { isClientConfig, updateClientConfig } from '../utils/config'
 import {
   addShortcutEvent,
   isShortcutEventData,
@@ -20,6 +20,7 @@ import './Shortcuts.css'
 const Shortcuts: React.FC = () => {
   const ws = useWebSocket()
   const handleError = useErrorHandler()
+  const { configuration, updateConfiguration } = useConfig()
 
   const [shortcutEvents, setShortcutEvents] = useState<ShortcutEvent[]>([])
 
@@ -37,7 +38,7 @@ const Shortcuts: React.FC = () => {
         if (isShortcutEventData(data)) {
           shortcutEventData = data
         } else if (isClientConfig(data)) {
-          updateCLientConfig(data)
+          updateClientConfig(updateConfiguration, data)
         } else {
           throw new Error('Invalid data received from the server.')
         }
@@ -48,14 +49,16 @@ const Shortcuts: React.FC = () => {
       if (shortcutEventData) {
         const id = nanoid()
 
-        setShortcutEvents((prevShortcutEvents) => addShortcutEvent(prevShortcutEvents, { ...shortcutEventData!, id }))
+        setShortcutEvents((prevShortcutEvents) =>
+          addShortcutEvent(prevShortcutEvents, { ...shortcutEventData!, id }, configuration.count)
+        )
 
         setTimeout(() => {
           setShortcutEvents((prevShortcutEvents) => removeShortcutEvent(prevShortcutEvents, id))
-        }, SHORTCUT_DURATION * 1000)
+        }, configuration.duration * 1000)
       }
     },
-    [handleError]
+    [configuration, handleError, updateConfiguration]
   )
 
   useEffect(() => {
