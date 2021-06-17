@@ -14,7 +14,10 @@ const AnimationVariants = {
 const Shortcut: React.FC<Props> = ({ event }) => {
   return (
     <motion.li className="shortcut" initial="initial" animate="visible" exit="exit" variants={AnimationVariants}>
-      <span>{getShortcut(event)}</span>
+      <span className="description">
+        {getShortcut(event)}
+        {event.count > 1 && <span className="count">x{event.count}</span>}
+      </span>
     </motion.li>
   )
 }

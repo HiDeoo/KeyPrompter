@@ -14,6 +14,14 @@ const CharacterMap: Record<string, string> = {
 }
 
 export function addShortcutEvent(shortcutEvents: ShortcutEvent[], shortcutEvent: ShortcutEvent): ShortcutEvent[] {
+  const previousShortcutEvent = shortcutEvents[shortcutEvents.length - 1]
+
+  if (previousShortcutEvent && areShortcutEventsIdentical(previousShortcutEvent, shortcutEvent)) {
+    return [...shortcutEvents.slice(0, -1), { ...previousShortcutEvent, count: previousShortcutEvent.count + 1 }]
+  }
+
+  shortcutEvent.count = 1
+
   return [...shortcutEvents.slice(-1 * SHORTCUT_MAX_COUNT + 1), shortcutEvent]
 }
 
@@ -65,10 +73,23 @@ function getShortcutCharacter({ character }: ShortcutEvent): string {
   return character
 }
 
+function areShortcutEventsIdentical(l: ShortcutEvent, r: ShortcutEvent): boolean {
+  return (
+    l.character === r.character &&
+    l.code === r.code &&
+    l.modifiers.command === r.modifiers.command &&
+    l.modifiers.control === r.modifiers.control &&
+    l.modifiers.fn === r.modifiers.fn &&
+    l.modifiers.option === r.modifiers.option &&
+    l.modifiers.shift === r.modifiers.shift
+  )
+}
+
 export interface ShortcutEvent {
   id: string
   character: string
   code: number
+  count: number
   modifiers: {
     command: boolean
     control: boolean
