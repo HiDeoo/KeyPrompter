@@ -1,8 +1,6 @@
 package keyboard
 
 import (
-	"fmt"
-
 	hook "github.com/robotn/gohook"
 )
 
@@ -18,9 +16,6 @@ func HandleEvents(onEvent func(keyboardEvent KeyboardEvent)) {
 			case hook.KeyDown:
 				if !isModifier(event) && len(modifiers) > 0 {
 					keyboardEvent := newKeyboardEvent(event, modifiers)
-
-					// TODO(HiDeoo)
-					fmt.Printf("%+v\n", keyboardEvent)
 
 					onEvent(keyboardEvent)
 				}
