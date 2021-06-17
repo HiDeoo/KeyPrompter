@@ -4,13 +4,15 @@ import (
 	"encoding/json"
 	"os"
 
+	"github.com/HiDeoo/KeyPrompter/cli"
 	"github.com/HiDeoo/KeyPrompter/keyboard"
 	"github.com/HiDeoo/KeyPrompter/net"
 	flags "github.com/jessevdk/go-flags"
 )
 
 var opts struct {
-	Port uint `short:"p" long:"port" description:"Port used to run the web UI" required:"true"`
+	Config string `short:"c" long:"config" description:"Optional client configuration file" value-name:"PATH"`
+	Port   uint   `short:"p" long:"port" description:"Port used to run the web UI" required:"true" value-name:"PORT"`
 }
 
 func main() {
@@ -20,7 +22,15 @@ func main() {
 		os.Exit(1)
 	}
 
-	pool := net.Serve(opts.Port)
+	var clientConfig *cli.ClientConfig
+
+	if len(opts.Config) > 0 {
+		clientConfig = cli.ReadConfig(opts.Config)
+	} else {
+		clientConfig = new(cli.ClientConfig)
+	}
+
+	pool := net.Serve(opts.Port, clientConfig)
 
 	keyboard.HandleEvents(func(keyboardEvent keyboard.KeyboardEvent) {
 		eventJson, err := json.Marshal(keyboardEvent)

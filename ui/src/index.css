@@ -15,3 +15,7 @@ body {
 body > div {
   height: 100%;
 }
+
+:root {
+  --font-size: 18px;
+}

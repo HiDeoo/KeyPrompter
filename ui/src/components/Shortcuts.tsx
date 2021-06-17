@@ -6,6 +6,7 @@ import { useErrorHandler } from 'react-error-boundary'
 import Shortcut from './Shortcut'
 import { SHORTCUT_DURATION } from '../constants/shortcut'
 import { useWebSocket } from '../contexts/WebSocketContext'
+import { isClientConfig, updateCLientConfig } from '../utils/config'
 import {
   addShortcutEvent,
   isShortcutEventData,
@@ -28,27 +29,31 @@ const Shortcuts: React.FC = () => {
 
   const onMessage = useCallback(
     (event: MessageEvent) => {
-      let shortcutEventData: ShortcutEventData
+      let shortcutEventData: ShortcutEventData | undefined
 
       try {
         const data = JSON.parse(event.data)
 
         if (isShortcutEventData(data)) {
           shortcutEventData = data
+        } else if (isClientConfig(data)) {
+          updateCLientConfig(data)
         } else {
-          throw new Error('Invalid shortcut event data.')
+          throw new Error('Invalid data received from the server.')
         }
       } catch (error) {
-        handleError(new Error('Unable to parse shortcut event data.'))
+        handleError(error instanceof SyntaxError ? new Error('Unable to parse server data.') : error)
       }
 
-      const id = nanoid()
+      if (shortcutEventData) {
+        const id = nanoid()
 
-      setShortcutEvents((prevShortcutEvents) => addShortcutEvent(prevShortcutEvents, { ...shortcutEventData, id }))
+        setShortcutEvents((prevShortcutEvents) => addShortcutEvent(prevShortcutEvents, { ...shortcutEventData!, id }))
 
-      setTimeout(() => {
-        setShortcutEvents((prevShortcutEvents) => removeShortcutEvent(prevShortcutEvents, id))
-      }, SHORTCUT_DURATION * 1000)
+        setTimeout(() => {
+          setShortcutEvents((prevShortcutEvents) => removeShortcutEvent(prevShortcutEvents, id))
+        }, SHORTCUT_DURATION * 1000)
+      }
     },
     [handleError]
   )

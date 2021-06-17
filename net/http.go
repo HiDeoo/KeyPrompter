@@ -13,12 +13,12 @@ import (
 
 const Timeout = 10 * time.Second
 
-func Serve(port uint) *Pool {
+func Serve(port uint, clientConfig *cli.ClientConfig) *Pool {
 	pool := newPool()
 
 	go pool.run()
 
-	addRouteHandlers(pool)
+	addRouteHandlers(pool, clientConfig)
 
 	go func() {
 		fmt.Printf("You can now view the KeyPrompter UI in the browser: %s%s.\n", cli.Green("http://localhost:"), cli.BoldGreen(port))
@@ -29,10 +29,10 @@ func Serve(port uint) *Pool {
 	return pool
 }
 
-func addRouteHandlers(pool *Pool) {
+func addRouteHandlers(pool *Pool, clientConfig *cli.ClientConfig) {
 	http.Handle("/", ui.AssetHandler())
 
 	http.HandleFunc("/ws", func(rw http.ResponseWriter, r *http.Request) {
-		webSocketHandler(rw, r, pool)
+		webSocketHandler(rw, r, pool, clientConfig)
 	})
 }

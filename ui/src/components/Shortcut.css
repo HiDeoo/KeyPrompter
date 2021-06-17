@@ -12,13 +12,13 @@
   border-radius: 5px;
   color: white;
   display: inline-block;
-  font-size: 18px;
+  font-size: var(--font-size);
   font-weight: bold;
   padding: 10px 13px;
 }
 
 .count {
-  font-size: 12px;
+  font-size: calc(var(--font-size) * 0.7);
   margin-left: 8px;
   position: relative;
   top: 3px;
