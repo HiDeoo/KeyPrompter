@@ -69,6 +69,12 @@ var SpecialKeyMap = map[KeyboardModifier]string{
 	126: "↑",   // Arrow Up
 }
 
+var SpecialKeyWithModifiersMap = map[KeyboardModifier]string{
+	30: "]",  // Bracket Right
+	33: "[",  // Bracket Left
+	42: "\\", // Backslash
+}
+
 func newKeyboardEvent(event hook.Event, modifiers map[KeyboardModifier]hook.Event) KeyboardEvent {
 	keyboardEvent := KeyboardEvent{
 		Character: hook.RawcodetoKeychar(event.Rawcode),
@@ -77,9 +83,9 @@ func newKeyboardEvent(event hook.Event, modifiers map[KeyboardModifier]hook.Even
 	}
 
 	if isSpecialKey(event) {
-		if specialKey, ok := SpecialKeyMap[event.Rawcode]; ok {
-			keyboardEvent.Character = specialKey
-		}
+		keyboardEvent.Character = SpecialKeyMap[event.Rawcode]
+	} else if isSpecialKeyWithModifiers(event) {
+		keyboardEvent.Character = SpecialKeyWithModifiersMap[event.Rawcode]
 	}
 
 	return keyboardEvent
@@ -137,6 +143,14 @@ func isShiftOnlyModifier(modifiers map[KeyboardModifier]hook.Event) bool {
 
 func isSpecialKey(event hook.Event) bool {
 	if _, ok := SpecialKeyMap[event.Rawcode]; ok {
+		return true
+	}
+
+	return false
+}
+
+func isSpecialKeyWithModifiers(event hook.Event) bool {
+	if _, ok := SpecialKeyWithModifiersMap[event.Rawcode]; ok {
 		return true
 	}
 
