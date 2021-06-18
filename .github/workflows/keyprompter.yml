@@ -46,7 +46,7 @@ jobs:
           echo "::set-output name=version::$VERSION"
 
       - name: Build server
-        run: go build -ldflags="-X 'main.version=${{ steps.version.outputs.version }}'" -o keyprompter
+        run: go build -ldflags="-X 'main.Version=${{ steps.version.outputs.version }}'" -o keyprompter
 
       - name: Release
         uses: softprops/action-gh-release@v1
