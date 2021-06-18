@@ -1,6 +1,9 @@
+import { motion } from 'framer-motion'
 import { ErrorBoundary as Boundary, ErrorBoundaryPropsWithComponent, FallbackProps } from 'react-error-boundary'
 
 import { useWebSocket } from '../contexts/WebSocketContext'
+
+import './ErrorBoundary.css'
 
 const ErrorBoundary: React.FC = ({ children }) => {
   const ws = useWebSocket()
@@ -20,12 +23,15 @@ const ErrorBoundary: React.FC = ({ children }) => {
 
 export default ErrorBoundary
 
-const Fallback: React.FC<FallbackProps> = ({ error }) => {
-  // TODO(HiDeoo)
+const Fallback: React.FC<FallbackProps> = () => {
   return (
-    <div role="alert">
-      <p>Something went wrong:</p>
-      <pre>{error.message}</pre>
-    </div>
+    <motion.div
+      role="alert"
+      className="error"
+      animate={{ rotate: [6, -12, 12, -6, 0] }}
+      transition={{ repeat: Infinity, repeatDelay: 5 }}
+    >
+      🤕
+    </motion.div>
   )
 }
