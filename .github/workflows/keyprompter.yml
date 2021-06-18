@@ -39,8 +39,12 @@ jobs:
         with:
           go-version: "1.16"
 
+      - name: Get version
+        id: get_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+
       - name: Build server
-        run: go build -o keyprompter
+        run: go build -ldflags="-X 'main.version=${{ steps.get_version.outputs.VERSION }}'" -o keyprompter
 
       - name: Release
         uses: softprops/action-gh-release@v1
