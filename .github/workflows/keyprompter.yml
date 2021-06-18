@@ -46,7 +46,9 @@ jobs:
           echo "::set-output name=version::$VERSION"
 
       - name: Build server
-        run: go build -ldflags="-X 'main.Version=${{ steps.version.outputs.version }}'" -o keyprompter
+        run: |
+          go build -ldflags="-X 'main.Version=${{ steps.version.outputs.version }}'" -o keyprompter
+          zip keyprompter-macos.zip keyprompter
 
       - name: Release
         uses: softprops/action-gh-release@v1
@@ -54,6 +56,6 @@ jobs:
         with:
           draft: true
           name: KeyPrompter ${{ steps.version.outputs.version }}
-          files: keyprompter
+          files: keyprompter-macos.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
