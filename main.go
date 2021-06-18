@@ -11,7 +11,7 @@ import (
 	flags "github.com/jessevdk/go-flags"
 )
 
-var Version = "dev"
+var Version = "development version"
 
 var opts struct {
 	Config  string `short:"c" long:"config" description:"Optional client configuration file" value-name:"PATH"`
@@ -21,7 +21,7 @@ var opts struct {
 
 func main() {
 	opts.Version = func() {
-		fmt.Printf("KeyPrompter version %s\n", Version)
+		fmt.Printf("KeyPrompter %s\n", Version)
 		os.Exit(0)
 	}
 

@@ -44,7 +44,7 @@ jobs:
         run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
 
       - name: Build server
-        run: go build -ldflags="-X 'main.version=${{ steps.get_version.outputs.VERSION }}'" -o keyprompter
+        run: go build -ldflags="-X 'main.Version=$(git describe --tags)'" -o keyprompter
 
       - name: Release
         uses: softprops/action-gh-release@v1
