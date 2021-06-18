@@ -32,6 +32,7 @@ type KeyboardModifiers struct {
 	Shift   bool `json:"shift"`
 }
 
+// https://github.com/robotn/gohook/issues/14
 var SpecialKeyMap = map[KeyboardModifier]string{
 	36:  "↩",   // Return
 	51:  "⌫",   // Delete
