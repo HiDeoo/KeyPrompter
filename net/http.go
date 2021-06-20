@@ -13,7 +13,7 @@ import (
 
 const Timeout = 10 * time.Second
 
-func Serve(port uint, clientConfig *cli.ClientConfig) *Pool {
+func Serve(port int, clientConfig *cli.ClientConfig) *Pool {
 	pool := newPool()
 
 	go pool.run()
@@ -23,7 +23,7 @@ func Serve(port uint, clientConfig *cli.ClientConfig) *Pool {
 	go func() {
 		fmt.Printf("You can now view the KeyPrompter UI in the browser: %s%s.\n", cli.Green("http://localhost:"), cli.BoldGreen(port))
 
-		log.Fatal(http.ListenAndServe(":"+strconv.FormatUint(uint64(port), 10), nil))
+		log.Fatal(http.ListenAndServe(":"+strconv.Itoa(port), nil))
 	}()
 
 	return pool
