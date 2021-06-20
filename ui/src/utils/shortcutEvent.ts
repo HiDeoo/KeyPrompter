@@ -65,7 +65,6 @@ function getShortcutModifiers({ modifiers }: ShortcutEvent): string {
 function areShortcutEventsIdentical(l: ShortcutEvent, r: ShortcutEvent): boolean {
   return (
     l.character === r.character &&
-    l.code === r.code &&
     l.modifiers.command === r.modifiers.command &&
     l.modifiers.control === r.modifiers.control &&
     l.modifiers.fn === r.modifiers.fn &&
