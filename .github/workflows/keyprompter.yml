@@ -47,8 +47,11 @@ jobs:
 
       - name: Build server
         run: |
-          go build -ldflags="-X 'main.Version=${{ steps.version.outputs.version }}'" -o keyprompter
-          zip keyprompter-macos.zip keyprompter
+          CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 go build -ldflags="-X 'main.Version=${{ steps.version.outputs.version }}'" -o keyprompter
+          zip keyprompter-macos-amd64.zip keyprompter
+          rm keyprompter
+          CGO_ENABLED=1 GOOS=darwin GOARCH=arm64 go build -ldflags="-X 'main.Version=${{ steps.version.outputs.version }}'" -o keyprompter
+          zip keyprompter-macos-arm64.zip keyprompter
 
       - name: Release
         uses: softprops/action-gh-release@v1
@@ -56,6 +59,8 @@ jobs:
         with:
           draft: true
           name: KeyPrompter ${{ steps.version.outputs.version }}
-          files: keyprompter-macos.zip
+          files: |
+            keyprompter-macos-amd64.zip
+            keyprompter-macos-arm64.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
