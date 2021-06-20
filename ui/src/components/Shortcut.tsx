@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
 
 import { useConfig } from '../contexts/ConfigContext'
-import { getShortcut, ShortcutEvent } from '../utils/shortcutEvent'
+import { getShortcutRepresentation, ShortcutEvent } from '../utils/shortcutEvent'
 
 import './Shortcut.css'
 
@@ -21,7 +21,7 @@ const Shortcut: React.FC<Props> = ({ event }) => {
       }}
     >
       <span className="description">
-        {getShortcut(event)}
+        {getShortcutRepresentation(event)}
         {event.count > 1 && <span className="count">x{event.count}</span>}
       </span>
     </motion.li>

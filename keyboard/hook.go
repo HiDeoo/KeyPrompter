@@ -1,25 +1,25 @@
 package keyboard
 
 import (
+	"github.com/google/go-cmp/cmp"
 	hook "github.com/robotn/gohook"
 )
 
-func HandleEvents(onEvent func(keyboardEvent KeyboardEvent)) {
+type EventHandler = func(keyboardEvent KeyboardEvent)
+
+func HandleEvents(onEvent EventHandler) {
 	eventChannel := hook.Start()
 	defer hook.End()
 
-	modifiers := make(map[KeyboardModifier]hook.Event)
+	modifiers := make(KeyboardModifiers)
+	var lastKeyDownShortcutEvent KeyboardEvent
 
 	for event := range eventChannel {
 		if event.Kind == hook.KeyDown || event.Kind == hook.KeyHold || event.Kind == hook.KeyUp {
 			switch event.Kind {
 			case hook.KeyDown:
-				if !isModifier(event) &&
-					len(modifiers) > 0 &&
-					!isShiftOnlyModifier(modifiers) &&
-					!isSpecialKey(event) &&
-					!isSpecialKeyWithModifiers(event) {
-					sendEvent(onEvent, event, modifiers)
+				if isShortcutEvent(event, modifiers) {
+					lastKeyDownShortcutEvent = sendEvent(onEvent, event, modifiers)
 				}
 				break
 			case hook.KeyHold:
@@ -32,21 +32,26 @@ func HandleEvents(onEvent func(keyboardEvent KeyboardEvent)) {
 					if _, ok := modifiers[event.Rawcode]; ok {
 						delete(modifiers, event.Rawcode)
 					}
+				} else if isSpecialKeyEvent(event) {
+					sendEvent(onEvent, event, modifiers)
 				} else {
-					if isSpecialKey(event) {
-						sendEvent(onEvent, event, modifiers)
-					} else if isSpecialKeyWithModifiers(event) && len(modifiers) > 0 {
+					keyboardEvent := newKeyboardEvent(event, modifiers)
+
+					// Some specific basic shortcuts are still missing a key down event. If the event for this specific combo was
+					// not sent yet, send it.
+					if !cmp.Equal(lastKeyDownShortcutEvent, keyboardEvent) && isShortcutEvent(event, modifiers) {
 						sendEvent(onEvent, event, modifiers)
 					}
 				}
-				break
 			}
 		}
 	}
 }
 
-func sendEvent(fn func(keyboardEvent KeyboardEvent), event hook.Event, modifiers map[KeyboardModifier]hook.Event) {
+func sendEvent(send EventHandler, event hook.Event, modifiers KeyboardModifiers) KeyboardEvent {
 	keyboardEvent := newKeyboardEvent(event, modifiers)
 
-	fn(keyboardEvent)
+	send(keyboardEvent)
+
+	return keyboardEvent
 }

@@ -46,8 +46,7 @@ const Shortcuts: React.FC = () => {
         handleError(error instanceof SyntaxError ? new Error('Unable to parse server data.') : error)
       }
 
-      // eslint-disable-next-line no-control-regex
-      if (shortcutEventData && /[^\x00-\x08\x0a-\x1a]/.test(shortcutEventData.character)) {
+      if (shortcutEventData) {
         const id = nanoid()
 
         setShortcutEvents((prevShortcutEvents) =>

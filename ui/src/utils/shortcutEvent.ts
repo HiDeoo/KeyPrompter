@@ -6,11 +6,6 @@ const ModifierMap: Record<string, string> = {
   shift: '⇧',
 }
 
-const CharacterMap: Record<string, string> = {
-  '\t': '⇥',
-  ' ': '␣',
-}
-
 export function addShortcutEvent(
   shortcutEvents: ShortcutEvent[],
   shortcutEvent: ShortcutEvent,
@@ -51,8 +46,8 @@ export function isShortcutEventData(data: unknown): data is ShortcutEventData {
   )
 }
 
-export function getShortcut(shortcutEvent: ShortcutEvent): string {
-  return getShortcutModifiers(shortcutEvent).concat(getShortcutCharacter(shortcutEvent).toUpperCase())
+export function getShortcutRepresentation(shortcutEvent: ShortcutEvent): string {
+  return getShortcutModifiers(shortcutEvent).concat(shortcutEvent.character.toUpperCase())
 }
 
 function getShortcutModifiers({ modifiers }: ShortcutEvent): string {
@@ -65,14 +60,6 @@ function getShortcutModifiers({ modifiers }: ShortcutEvent): string {
   })
 
   return shortcutModifiers
-}
-
-function getShortcutCharacter({ character }: ShortcutEvent): string {
-  if (CharacterMap.hasOwnProperty(character)) {
-    return CharacterMap[character]
-  }
-
-  return character
 }
 
 function areShortcutEventsIdentical(l: ShortcutEvent, r: ShortcutEvent): boolean {
