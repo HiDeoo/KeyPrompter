@@ -18,7 +18,7 @@
 
 I could not find a macOS application to broadcast keyboard shortcuts to a web page so it can be easily used with various live streaming softwares so I decided to build my own.
 
-KeyPrompter is a Go application monitoring keyboard shortcuts and also serving locally a React application which can be used to visualize the pressed shortcuts (_only shortcuts are visible meaning typing text won't display anything_).
+KeyPrompter is a Go application monitoring keyboard shortcuts and also serving locally a React application which can be used to visualize the pressed shortcuts using WebSocket (_only shortcuts are visible meaning typing text won't display anything_).
 
 ## Installation
 
